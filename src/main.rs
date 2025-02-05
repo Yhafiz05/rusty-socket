@@ -28,8 +28,15 @@ fn main() {
 fn handle_client(mut stream: TcpStream) {
     let mut readline = BufReader::new(&stream);
     let mut writeline  = BufWriter::new(&stream);
+    writeln!(writeline, "welcome to the echo server !!!").unwrap();
+    writeln!(writeline, "For exiting press enter").unwrap();
+    writeline.flush().unwrap();
+
     let mut line = String::new();
     while match readline.read_line(&mut line){
+        Ok(1) =>{
+            false
+        },
         Ok(n) => {
             writeln!(writeline, "{}", line.trim_end()).unwrap();
             writeline.flush().unwrap();
@@ -42,5 +49,6 @@ fn handle_client(mut stream: TcpStream) {
             false
         }
     }{}
+
     stream.shutdown(Shutdown::Both).unwrap()
 }
